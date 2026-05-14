@@ -1,16 +1,26 @@
-import ollama
+from ollama import Client
+
+from app.core.config import settings
+
+client = Client(host=settings.ollama_host)
 
 
-async def generate_response(prompt: str):
+async def stream_response(prompt: str):
 
-    response = ollama.chat(
-        model="phi3",
+    stream = client.chat(
+        model=settings.model_name,
         messages=[
             {
                 "role": "user",
                 "content": prompt
             }
-        ]
+        ],
+        stream=True
     )
 
-    return response["message"]["content"]
+    for chunk in stream:
+
+        content = chunk["message"]["content"]
+
+        if content:
+            yield content

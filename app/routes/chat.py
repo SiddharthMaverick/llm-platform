@@ -1,14 +1,21 @@
 from fastapi import APIRouter
+from fastapi.responses import StreamingResponse
 
-from app.schemas.chat import ChatRequest, ChatResponse
-from app.services.ollama_service import generate_response
+from app.schemas.chat import ChatRequest
+from app.services.ollama_service import stream_response
+from app.core.logging import logger
 
 router = APIRouter()
 
 
-@router.post("/chat", response_model=ChatResponse)
+@router.post("/chat")
 async def chat(request: ChatRequest):
 
-    response = await generate_response(request.prompt)
+    logger.info(f"Received prompt: {request.prompt}")
 
-    return ChatResponse(response=response)
+    generator = stream_response(request.prompt)
+
+    return StreamingResponse(
+        generator,
+        media_type="text/plain"
+    )
