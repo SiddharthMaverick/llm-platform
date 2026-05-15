@@ -1,9 +1,27 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+import os
 
 from app.routes.chat import router as chat_router
 from app.rag.startup import initialize_rag
 
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Mount static files
+static_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
+if os.path.exists(static_path):
+    app.mount("/static", StaticFiles(directory=static_path), name="static")
 
 
 @app.on_event("startup")
@@ -17,7 +35,4 @@ app.include_router(chat_router)
 
 @app.get("/")
 async def root():
-
-    return {
-        "message": "LLM platform running"
-    }
+    return FileResponse("static/index.html")

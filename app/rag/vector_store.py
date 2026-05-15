@@ -6,7 +6,7 @@ index = faiss.IndexFlatL2(384)
 documents = []
 
 
-def add_embeddings(chunks, embeddings):
+def add_embeddings(chunks, embeddings, doc_source="unknown"):
 
     global documents
 
@@ -17,7 +17,11 @@ def add_embeddings(chunks, embeddings):
 
     index.add(embeddings)
 
-    documents.extend(chunks)
+    for chunk in chunks:
+        documents.append({
+            "text": chunk,
+            "source": doc_source
+        })
 
 
 def search(query_embedding, k=3):
@@ -43,3 +47,11 @@ def search(query_embedding, k=3):
             results.append(documents[idx])
 
     return results
+
+
+def clear_embeddings():
+    
+    global documents, index
+    
+    documents = []
+    index = faiss.IndexFlatL2(384)

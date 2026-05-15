@@ -7,7 +7,7 @@ async def rag_chat(prompt: str):
 
     contexts = retrieve(prompt)
 
-    context_text = "\n\n".join(contexts)
+    context_text = "\n\n".join([doc["text"] for doc in contexts])
 
     augmented_prompt = f"""
 Use the following context to answer the question.
