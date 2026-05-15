@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 
 from app.schemas.chat import ChatRequest
-from app.services.ollama_service import stream_response
+from app.services.rag_service import rag_chat
 from app.core.logging import logger
 
 router = APIRouter()
@@ -13,7 +13,7 @@ async def chat(request: ChatRequest):
 
     logger.info(f"Received prompt: {request.prompt}")
 
-    generator = stream_response(request.prompt)
+    generator = rag_chat(request.prompt)
 
     return StreamingResponse(
         generator,
