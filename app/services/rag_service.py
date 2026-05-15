@@ -1,5 +1,7 @@
 from app.rag.retriever import retrieve
+
 from app.services.ollama_service import client
+
 from app.core.config import settings
 
 
@@ -7,16 +9,26 @@ async def rag_chat(prompt: str):
 
     contexts = retrieve(prompt)
 
-    context_text = "\n\n".join(contexts)
+    context_text = "\n\n".join([
+        f"""
+SOURCE: {doc['source']}
+CHUNK: {doc['chunk_id']}
+
+{doc['text']}
+"""
+        for doc in contexts
+    ])
 
     augmented_prompt = f"""
-Use the following context to answer the question.
+Use the provided context to answer the question.
 
 Context:
 {context_text}
 
 Question:
 {prompt}
+
+Answer:
 """
 
     stream = client.chat(

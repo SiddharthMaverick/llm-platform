@@ -12,14 +12,26 @@ def read_pdf(path):
 
     return text
 
-def chunk_text(text, chunk_size=500):
+def chunk_text(
+    text,
+    source,
+    chunk_size=500
+):
 
     chunks = []
+
+    chunk_id = 0
 
     for i in range(0, len(text), chunk_size):
 
         chunk = text[i:i + chunk_size]
 
-        chunks.append(chunk)
+        chunks.append({
+            "text": chunk,
+            "source": source,
+            "chunk_id": chunk_id
+        })
+
+        chunk_id += 1
 
     return chunks
