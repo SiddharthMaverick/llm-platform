@@ -1,4 +1,4 @@
-# Prometheus AI — RAG Chat Platform
+# Forge Master
 
 A futuristic Retrieval Augmented Generation (RAG) workspace with a polished web experience, built using FastAPI, Ollama, and FAISS. Ask questions, upload documents, and shape responses with session memory, system prompt overrides, and mode selection.
 
@@ -6,17 +6,20 @@ A futuristic Retrieval Augmented Generation (RAG) workspace with a polished web 
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green)
 ![Ollama](https://img.shields.io/badge/Ollama-local-lightgrey)
 
-## � Demo
+## 🎬 Demo
 
 ### Platform Interface — Opening View
-The intuitive futuristic interface with Prometheus branding. Start chatting immediately with a clean, responsive layout.
+The intuitive futuristic interface with Forge Master branding. Start chatting immediately with a clean, responsive layout.
 
 ![Platform Opening View](platform.png)
 
 ### How It Works — In Action
 Watch how the RAG platform retrieves documents and streams intelligent responses in real time.
 
-https://github.com/SiddharthMaverick/llm-platform/assets/raw/main/NEW.mp4
+<video width="100%" controls>
+  <source src="./NEW.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ## �🎯 Features
 
@@ -27,7 +30,7 @@ https://github.com/SiddharthMaverick/llm-platform/assets/raw/main/NEW.mp4
 - **🚀 Streaming replies**: See the model generate responses in real time, token by token
 - **📤 Document upload**: Add PDFs or plain text files on the fly to expand your knowledge base
 - **🔐 Local inference**: Run Ollama locally with no external API keys or cloud dependencies
-- **🎨 Futuristic UI**: Modern Prometheus-branded interface with responsive design for desktop and mobile
+- **🎨 Futuristic UI**: Modern Forge Master-branded interface with responsive design for desktop and mobile
 - **⚡ Fast embeddings**: 384-dimensional semantic vectors using SentenceTransformer for accurate retrieval
 
 ## 📋 Prerequisites
