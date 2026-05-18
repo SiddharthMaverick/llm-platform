@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LLM RAG Chat</title>
+    <title>LLM RAG Workspace</title>
     <style>
         * {
             margin: 0;
@@ -14,68 +14,176 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px;
+            padding: 16px;
         }
 
         .container {
             width: 100%;
-            max-width: 900px;
-            height: 90vh;
+            max-width: 1200px;
+            min-height: 88vh;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: minmax(280px, 360px) 1fr;
+            gap: 1px;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .sidebar,
+        .main {
+            background: white;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+        }
+
+        .sidebar {
+            padding: 24px;
+            gap: 18px;
+            border-right: 1px solid #ececec;
+        }
+
+        .main {
+            padding: 0;
         }
 
         .header {
+            padding: 24px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .header h1 {
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 28px;
+            font-weight: 700;
         }
 
         .header p {
-            font-size: 12px;
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .panel {
+            background: #fafafa;
+            border: 1px solid #e7e7e7;
+            border-radius: 18px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .panel h2 {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field label {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .field input,
+        .field textarea,
+        .field select {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid #d8d8d8;
+            padding: 12px 14px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .field textarea {
+            min-height: 120px;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .control-row button,
+        .control-row .status-pill {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .status-pill {
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid #d8d8d8;
+            background: #fff;
+            color: #333;
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .status-pill span {
             opacity: 0.8;
-            margin-top: 5px;
+            font-size: 12px;
+        }
+
+        .chat-main {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .chat-container {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
-            background: #f5f5f5;
+            padding: 24px;
+            background: #f7f8fc;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 18px;
+        }
+
+        .footer {
+            padding: 18px 24px 24px;
+            background: white;
+            border-top: 1px solid #ececec;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            display: flex;
+            gap: 12px;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid #d8d8d8;
+            padding: 14px 16px;
+            font-size: 14px;
         }
 
         .message {
             display: flex;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            animation: slideIn 0.25s ease-out;
         }
 
         .message.user {
@@ -87,208 +195,211 @@
         }
 
         .message-content {
-            max-width: 70%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            word-wrap: break-word;
-            line-height: 1.5;
+            max-width: 80%;
+            padding: 18px;
+            border-radius: 18px;
+            line-height: 1.65;
+            white-space: pre-wrap;
+            word-break: break-word;
+            background: #ffffff;
+            color: #222;
+            border: 1px solid #e4e6f0;
         }
 
         .message.user .message-content {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            border-color: transparent;
             border-bottom-right-radius: 4px;
         }
 
         .message.bot .message-content {
-            background: #e0e0e0;
-            color: #333;
+            background: #edf0fb;
+            border-color: #d9ddee;
             border-bottom-left-radius: 4px;
+        }
+
+        .message-content code {
+            background: rgba(55, 65, 81, 0.08);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .message-content pre {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: 14px;
+            overflow-x: auto;
+            margin: 12px 0;
         }
 
         .typing-indicator {
             display: flex;
             align-items: center;
-            gap: 4px;
-            padding: 12px 16px;
-            background: #e0e0e0;
-            border-radius: 12px;
-            border-bottom-left-radius: 4px;
+            gap: 8px;
+            padding: 14px 16px;
+            background: #edf0fb;
+            border-radius: 18px;
             width: fit-content;
         }
 
         .typing-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            background: #666;
-            animation: typing 1.4s infinite;
+            background: #667eea;
+            animation: typing 1.3s infinite ease-in-out;
         }
 
         .typing-dot:nth-child(2) {
-            animation-delay: 0.2s;
+            animation-delay: 0.1s;
         }
 
         .typing-dot:nth-child(3) {
-            animation-delay: 0.4s;
+            animation-delay: 0.2s;
         }
 
-        @keyframes typing {
-            0%, 60%, 100% {
-                opacity: 0.5;
-                transform: translateY(0);
-            }
-            30% {
-                opacity: 1;
-                transform: translateY(-10px);
-            }
-        }
-
-        .input-area {
-            padding: 20px;
-            background: white;
-            border-top: 1px solid #e0e0e0;
+        .meta-bar {
+            font-size: 13px;
+            color: #555;
             display: flex;
-            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
-        .input-wrapper {
-            flex: 1;
-            display: flex;
-            gap: 10px;
+        .meta-bar .meta-item {
+            opacity: 0.85;
         }
 
-        input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid #ddd;
-            border-radius: 24px;
-            font-size: 14px;
-            font-family: inherit;
-            transition: all 0.3s ease;
+        .status-box {
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid #e7e7e7;
+            background: #fbfbfd;
+            font-size: 13px;
+            color: #333;
         }
 
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        .button-secondary {
+            background: #f5f5ff;
+            color: #2e3a6f;
+            border: 1px solid #d7dae7;
         }
 
-        input:disabled {
-            background: #f5f5f5;
-            cursor: not-allowed;
+        .button-secondary:hover:not(:disabled) {
+            transform: translateY(-1px);
         }
 
-        button {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 24px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            min-width: 100px;
+        .small-button {
+            padding: 12px 18px;
+            min-width: auto;
+            border-radius: 14px;
         }
 
-        button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        @media (max-width: 960px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid #ececec;
+            }
         }
 
-        button:active:not(:disabled) {
-            transform: translateY(0);
-        }
+        @media (max-width: 680px) {
+            .footer {
+                flex-direction: column;
+                align-items: stretch;
+            }
 
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+            .control-row {
+                flex-direction: column;
+            }
 
-        .error-message {
-            padding: 12px 16px;
-            background: #ffebee;
-            color: #c62828;
-            border-radius: 8px;
-            font-size: 14px;
-            margin: 10px 0;
-        }
-
-        .welcome-message {
-            text-align: center;
-            color: #999;
-            padding: 40px 20px;
-        }
-
-        .welcome-message h2 {
-            font-size: 24px;
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
-        .welcome-message p {
-            font-size: 14px;
-            color: #999;
-        }
-
-        /* Scrollbar styling */
-        .chat-container::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .chat-container::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        .chat-container::-webkit-scrollbar-thumb {
-            background: #667eea;
-            border-radius: 4px;
-        }
-
-        .chat-container::-webkit-scrollbar-thumb:hover {
-            background: #764ba2;
-        }
-
-        @media (max-width: 600px) {
             .message-content {
-                max-width: 90%;
-            }
-
-            .header h1 {
-                font-size: 20px;
-            }
-
-            button {
-                min-width: 80px;
-                padding: 10px 16px;
+                max-width: 100%;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🤖 LLM RAG Chat</h1>
-            <p>Ask me anything about your documents</p>
-        </div>
+        <div class="sidebar">
+            <div class="header">
+                <h1>LLM RAG Workspace</h1>
+                <p>Chat with your documents, control session memory, upload new sources, and refine the model behavior.</p>
+            </div>
 
-        <div class="chat-container" id="chatContainer">
-            <div class="welcome-message">
-                <h2>Welcome to LLM RAG Chat</h2>
-                <p>Start a conversation by typing a message below</p>
+            <div class="panel">
+                <h2>Conversation settings</h2>
+                <div class="field">
+                    <label for="modeSelect">Mode</label>
+                    <select id="modeSelect">
+                        <option value="Chat">Chat</option>
+                        <option value="Summarize">Summarize</option>
+                        <option value="Explain">Explain</option>
+                        <option value="Code Review">Code Review</option>
+                        <option value="Answer">Answer</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="useContextToggle">Use document context</label>
+                    <select id="useContextToggle">
+                        <option value="true">Enabled</option>
+                        <option value="false">Disabled</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="systemPrompt">Custom system instruction</label>
+                    <textarea id="systemPrompt" placeholder="You can specify assistant behavior here, e.g. 'Answer in concise bullet points.'"></textarea>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>Session & memory</h2>
+                <div class="status-box">
+                    <div class="meta-item"><strong>Session ID</strong></div>
+                    <div class="meta-item" id="sessionIdDisplay"></div>
+                </div>
+                <div class="control-row">
+                    <button class="button-secondary small-button" id="clearConvoBtn">Clear chat</button>
+                    <button class="button-secondary small-button" id="resetSessionBtn">New session</button>
+                </div>
+                <button class="button-secondary" id="clearMemoryBtn">Clear session memory</button>
+            </div>
+
+            <div class="panel">
+                <h2>Document upload</h2>
+                <div class="field">
+                    <label for="uploadFile">Upload PDF or text file</label>
+                    <input type="file" id="uploadFile" accept="application/pdf, text/plain" />
+                </div>
+                <button id="uploadBtn">Upload document</button>
+                <div class="status-box" id="uploadStatus">No upload yet.</div>
             </div>
         </div>
 
-        <div class="input-area">
-            <div class="input-wrapper">
-                <input 
-                    type="text" 
-                    id="messageInput" 
-                    placeholder="Ask a question or start typing..." 
-                    autocomplete="off"
-                >
-                <button id="sendBtn" onclick="sendMessage()">Send</button>
+        <div class="main">
+            <div class="chat-main">
+                <div class="chat-container" id="chatContainer">
+                    <div class="welcome-message">
+                        <h2>Welcome to LLM RAG Workspace</h2>
+                        <p>Type a prompt below, upload documents to expand the knowledge base, and experiment with modes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="input-wrapper">
+                    <input id="messageInput" type="text" placeholder="Type your prompt here..." autocomplete="off" />
+                    <button id="sendBtn">Send</button>
+                </div>
+                <button id="regenerateBtn" class="button-secondary small-button">Regenerate</button>
             </div>
         </div>
     </div>
@@ -297,109 +408,63 @@
         const chatContainer = document.getElementById('chatContainer');
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
-        let isLoading = false;
+        const regenerateBtn = document.getElementById('regenerateBtn');
+        const modeSelect = document.getElementById('modeSelect');
+        const useContextToggle = document.getElementById('useContextToggle');
+        const systemPromptInput = document.getElementById('systemPrompt');
+        const sessionIdDisplay = document.getElementById('sessionIdDisplay');
+        const clearConvoBtn = document.getElementById('clearConvoBtn');
+        const resetSessionBtn = document.getElementById('resetSessionBtn');
+        const clearMemoryBtn = document.getElementById('clearMemoryBtn');
+        const uploadFile = document.getElementById('uploadFile');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const uploadStatus = document.getElementById('uploadStatus');
 
         const sessionIdKey = 'llm_rag_chat_session_id';
-        let sessionId = localStorage.getItem(sessionIdKey);
-        if (!sessionId) {
-            sessionId = crypto?.randomUUID?.() || `${Math.random().toString(36).slice(2)}-${Date.now()}`;
-            localStorage.setItem(sessionIdKey, sessionId);
-        }
+        let sessionId = localStorage.getItem(sessionIdKey) || generateSessionId();
+        let lastPrompt = '';
+        let lastMessageElement = null;
 
-        // Focus input on load
-        window.addEventListener('load', () => {
-            messageInput.focus();
-        });
+        localStorage.setItem(sessionIdKey, sessionId);
+        sessionIdDisplay.textContent = sessionId;
 
-        // Send message on Enter key
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !isLoading) {
+        messageInput.focus();
+
+        sendBtn.addEventListener('click', sendMessage);
+        regenerateBtn.addEventListener('click', regenerateResponse);
+        clearConvoBtn.addEventListener('click', clearConversation);
+        resetSessionBtn.addEventListener('click', resetSession);
+        clearMemoryBtn.addEventListener('click', clearSessionMemory);
+        uploadBtn.addEventListener('click', uploadDocument);
+        messageInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey && !isLoading) {
+                event.preventDefault();
                 sendMessage();
             }
         });
 
-        async function sendMessage() {
-            const message = messageInput.value.trim();
+        let isLoading = false;
 
-            if (!message) return;
-            if (isLoading) return;
+        function generateSessionId() {
+            return crypto?.randomUUID?.() || `${Math.random().toString(36).slice(2)}-${Date.now()}`;
+        }
 
-            // Remove welcome message if it exists
-            const welcomeMessage = chatContainer.querySelector('.welcome-message');
-            if (welcomeMessage) {
-                welcomeMessage.remove();
-            }
+        function renderMarkdown(text) {
+            const escaped = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
 
-            // Add user message to chat
-            addMessage(message, 'user');
+            const formatted = escaped
+                .replace(/```([\s\S]*?)```/g, (match, code) => `<pre><code>${code.trim()}</code></pre>`)
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/\n\n+/g, '<br><br>')
+                .replace(/\n/g, '<br>')
+                .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
 
-            // Clear input and disable
-            messageInput.value = '';
-            messageInput.disabled = true;
-            sendBtn.disabled = true;
-            isLoading = true;
-
-            // Add typing indicator
-            const typingIndicator = addTypingIndicator();
-
-            try {
-                const response = await fetch('/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ prompt: message, session_id: sessionId })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                // Remove typing indicator
-                typingIndicator.remove();
-
-                // Process streaming response
-                const reader = response.body.getReader();
-                const decoder = new TextDecoder();
-                let botMessage = '';
-                let messageElement = null;
-
-                while (true) {
-                    const { done, value } = await reader.read();
-
-                    if (done) break;
-
-                    const chunk = decoder.decode(value);
-                    botMessage += chunk;
-
-                    // Add or update bot message
-                    if (!messageElement) {
-                        messageElement = addMessage('', 'bot');
-                    }
-
-                    messageElement.querySelector('.message-content').textContent = botMessage;
-
-                    // Auto scroll to bottom
-                    chatContainer.scrollTop = chatContainer.scrollHeight;
-                }
-
-            } catch (error) {
-                console.error('Error:', error);
-                
-                // Remove typing indicator
-                typingIndicator.remove();
-
-                // Add error message
-                addMessage(
-                    '❌ Error: ' + error.message + '. Make sure the backend server is running.',
-                    'bot'
-                );
-            } finally {
-                messageInput.disabled = false;
-                sendBtn.disabled = false;
-                isLoading = false;
-                messageInput.focus();
-            }
+            return formatted;
         }
 
         function addMessage(content, sender) {
@@ -408,12 +473,10 @@
 
             const contentDiv = document.createElement('div');
             contentDiv.className = 'message-content';
-            contentDiv.textContent = content;
+            contentDiv.innerHTML = renderMarkdown(content);
 
             messageDiv.appendChild(contentDiv);
             chatContainer.appendChild(messageDiv);
-
-            // Auto scroll to bottom
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             return messageDiv;
@@ -427,7 +490,7 @@
             contentDiv.className = 'message-content';
             contentDiv.style.padding = '8px 12px';
 
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 3; i += 1) {
                 const dot = document.createElement('div');
                 dot.className = 'typing-dot';
                 contentDiv.appendChild(dot);
@@ -435,11 +498,156 @@
 
             messageDiv.appendChild(contentDiv);
             chatContainer.appendChild(messageDiv);
-
-            // Auto scroll to bottom
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             return messageDiv;
+        }
+
+        async function sendMessage() {
+            const prompt = messageInput.value.trim();
+            if (!prompt || isLoading) return;
+
+            removeWelcomeMessage();
+            addMessage(prompt, 'user');
+            messageInput.value = '';
+            messageInput.disabled = true;
+            sendBtn.disabled = true;
+            isLoading = true;
+            lastPrompt = prompt;
+
+            const typingIndicator = addTypingIndicator();
+            lastMessageElement = null;
+
+            const payload = {
+                session_id: sessionId,
+                prompt,
+                system_prompt: systemPromptInput.value.trim() || undefined,
+                use_context: useContextToggle.value === 'true',
+                mode: modeSelect.value || undefined,
+            };
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server responded with ${response.status}`);
+                }
+
+                typingIndicator.remove();
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let assistantText = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    const chunk = decoder.decode(value, { stream: true });
+                    assistantText += chunk;
+
+                    if (!lastMessageElement) {
+                        lastMessageElement = addMessage('', 'bot');
+                    }
+                    lastMessageElement.querySelector('.message-content').innerHTML = renderMarkdown(assistantText);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+            } catch (error) {
+                typingIndicator.remove();
+                addMessage(`❌ ${error.message}`, 'bot');
+            } finally {
+                messageInput.disabled = false;
+                sendBtn.disabled = false;
+                isLoading = false;
+                messageInput.focus();
+            }
+        }
+
+        async function regenerateResponse() {
+            if (!lastPrompt || isLoading) return;
+            messageInput.value = lastPrompt;
+            await sendMessage();
+        }
+
+        function clearConversation() {
+            chatContainer.innerHTML = '';
+            chatContainer.appendChild(createWelcomePanel());
+        }
+
+        function resetSession() {
+            sessionId = generateSessionId();
+            localStorage.setItem(sessionIdKey, sessionId);
+            sessionIdDisplay.textContent = sessionId;
+            addStatus('Session reset, conversation cleared. New session created.', 'info');
+            clearConversation();
+        }
+
+        async function clearSessionMemory() {
+            try {
+                const resp = await fetch('/session/clear', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: sessionId }),
+                });
+                if (!resp.ok) {
+                    throw new Error(`Server responded ${resp.status}`);
+                }
+                addStatus('Session memory cleared.', 'success');
+                clearConversation();
+            } catch (error) {
+                addStatus(`Unable to clear memory: ${error.message}`, 'error');
+            }
+        }
+
+        function createWelcomePanel() {
+            const welcome = document.createElement('div');
+            welcome.className = 'welcome-message';
+            welcome.innerHTML = `<h2>Welcome to LLM RAG Workspace</h2><p>Type a prompt below, upload documents to expand the knowledge base, and experiment with modes.</p>`;
+            return welcome;
+        }
+
+        async function uploadDocument() {
+            const file = uploadFile.files[0];
+            if (!file) {
+                addStatus('Select a file before uploading.', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            uploadStatus.textContent = 'Uploading...';
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Upload failed with ${response.status}`);
+                }
+
+                const data = await response.json();
+                uploadStatus.textContent = `✅ ${data.message}`;
+            } catch (error) {
+                uploadStatus.textContent = `❌ ${error.message}`;
+            }
+        }
+
+        function addStatus(message, type = 'info') {
+            uploadStatus.textContent = message;
+            uploadStatus.style.color = type === 'error' ? '#b91c1c' : '#111827';
+            uploadStatus.style.background = type === 'error' ? '#fee2e2' : '#f8fafc';
+            uploadStatus.style.border = type === 'error' ? '1px solid #fca5a5' : '1px solid #e5e7eb';
+        }
+
+        function removeWelcomeMessage() {
+            const welcomeMessage = chatContainer.querySelector('.welcome-message');
+            if (welcomeMessage) {
+                welcomeMessage.remove();
+            }
         }
     </script>
 </body>
