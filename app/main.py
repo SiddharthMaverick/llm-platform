@@ -12,6 +12,9 @@ from app.routes.health import (
 from app.middleware.timing import (
     TimingMiddleware
 )
+from app.routes.upload import (
+    router as upload_router
+)
 app = FastAPI()
 
 # Add CORS middleware
@@ -40,6 +43,7 @@ async def startup_event():
 app.include_router(chat_router)
 
 app.include_router(health_router)
+app.include_router(upload_router)
 @app.get("/")
 async def root():
     return FileResponse("static/index.html")
