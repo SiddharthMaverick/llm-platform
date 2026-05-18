@@ -1,3 +1,5 @@
+import uuid
+
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 
@@ -11,11 +13,12 @@ router = APIRouter()
 @router.post("/chat")
 async def chat(request: ChatRequest):
 
-    logger.info(f"Received prompt: {request.prompt}")
+    session_id = request.session_id or str(uuid.uuid4())
+    logger.info(f"Received prompt: {request.prompt} session_id={session_id}")
 
     generator = rag_chat(
-    request.session_id,
-    request.prompt
+        session_id,
+        request.prompt
     )
 
     return StreamingResponse(

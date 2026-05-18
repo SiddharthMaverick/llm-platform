@@ -299,6 +299,13 @@
         const sendBtn = document.getElementById('sendBtn');
         let isLoading = false;
 
+        const sessionIdKey = 'llm_rag_chat_session_id';
+        let sessionId = localStorage.getItem(sessionIdKey);
+        if (!sessionId) {
+            sessionId = crypto?.randomUUID?.() || `${Math.random().toString(36).slice(2)}-${Date.now()}`;
+            localStorage.setItem(sessionIdKey, sessionId);
+        }
+
         // Focus input on load
         window.addEventListener('load', () => {
             messageInput.focus();
@@ -341,7 +348,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ prompt: message })
+                    body: JSON.stringify({ prompt: message, session_id: sessionId })
                 });
 
                 if (!response.ok) {
