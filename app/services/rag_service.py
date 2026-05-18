@@ -16,7 +16,12 @@ async def rag_chat(
     prompt: str
 ):
 
-    contexts = retrieve(prompt)
+    try:
+        contexts=retrieve(prompt)
+    except Exception as e:
+        yield f"Error retrieving context: {str(e)}"
+        
+        return
 
     context_text = "\n\n".join([
         f"""
@@ -55,12 +60,15 @@ Context:
 
     add_message(session_id,"user",prompt)
 
-    stream = client.chat(
-        model=settings.model_name,
-        messages=messages,
-        stream=True
-    )
-
+    try:
+        stream = client.chat(
+            model=settings.model_name,
+            messages=messages,
+            stream=True
+        )
+    except Exception as e:
+        yield f"LLM error: {str(e)}"
+    
     assistant_response = ""
 
     for chunk in stream:
