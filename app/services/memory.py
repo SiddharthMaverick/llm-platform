@@ -1,19 +1,32 @@
-conversation_history = []
+memory_store = {}
 
 
-def add_message(role, content):
+def add_message(
+    session_id,
+    role,
+    content
+):
 
-    conversation_history.append({
+    if session_id not in memory_store:
+
+        memory_store[session_id] = []
+
+    memory_store[session_id].append({
         "role": role,
         "content": content
     })
 
 
-def get_history():
+def get_history(session_id):
 
-    return conversation_history
+    return memory_store.get(
+        session_id,
+        []
+    )
 
 
-def clear_history():
+def clear_history(session_id):
 
-    conversation_history.clear()
+    if session_id in memory_store:
+
+        memory_store[session_id] = []

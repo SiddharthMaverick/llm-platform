@@ -4,13 +4,17 @@ from app.services.ollama_service import client
 
 from app.services.memory import (
     add_message,
-    get_history
+    get_history,
+    clear_history
 )
 
 from app.core.config import settings
 
 
-async def rag_chat(prompt: str):
+async def rag_chat(
+    session_id: str,
+    prompt: str
+):
 
     contexts = retrieve(prompt)
 
@@ -24,7 +28,7 @@ CHUNK: {doc['chunk_id']}
         for doc in contexts
     ])
 
-    history = get_history()
+    history = get_history(session_id)
 
     messages = []
 
@@ -49,10 +53,7 @@ Context:
         "content": prompt
     })
 
-    add_message(
-        "user",
-        prompt
-    )
+    add_message(session_id,"user",prompt)
 
     stream = client.chat(
         model=settings.model_name,
@@ -72,7 +73,4 @@ Context:
 
             yield content
 
-    add_message(
-        "assistant",
-        assistant_response
-    )
+    add_message(session_id,"assistant",assistant_response)

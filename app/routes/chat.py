@@ -13,7 +13,10 @@ async def chat(request: ChatRequest):
 
     logger.info(f"Received prompt: {request.prompt}")
 
-    generator = rag_chat(request.prompt)
+    generator = rag_chat(
+    request.session_id,
+    request.prompt
+    )
 
     return StreamingResponse(
         generator,
