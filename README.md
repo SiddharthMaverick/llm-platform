@@ -1,139 +1,89 @@
-# LLM RAG Chat Platform
+# Prometheus AI — RAG Chat Platform
 
-A full-stack Retrieval Augmented Generation (RAG) chat application with a modern web interface, built with FastAPI, Ollama, and FAISS. Search across multiple documents and get AI-powered answers backed by actual content.
+A futuristic Retrieval Augmented Generation (RAG) workspace with a polished web experience, built using FastAPI, Ollama, and FAISS. Ask questions, upload documents, and shape responses with session memory, system prompt overrides, and mode selection.
 
 ![Python](https://img.shields.io/badge/Python-3.9+-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+![Ollama](https://img.shields.io/badge/Ollama-local-lightgrey)
 
 ## 🎯 Features
 
-- **📚 Multi-Document RAG**: Search and retrieve from 12+ research papers simultaneously
-- **💬 Real-time Streaming**: Get responses as they're generated (no waiting for full output)
-- **🎨 Modern Web UI**: Beautiful, responsive chat interface with gradient design
-- **🔍 Semantic Search**: FAISS-based vector similarity search with 384-dimensional embeddings
-- **🏠 Local LLM**: Run Phi3 model locally with Ollama (no API keys needed)
-- **📖 Document Tracking**: See which document each answer came from
-- **⚡ Fast Inference**: Optimized for local deployment
-- **🛠 Production Ready**: Comprehensive error handling and logging
+- **📚 RAG-powered knowledge**: Retrieve answers from your uploaded documents using FAISS vector search
+- **🧠 Session memory**: Keep context across the chat and clear memory when needed
+- **⚙️ Mode selection**: Choose Chat, Summarize, Explain, Code Review, or Answer modes
+- **📝 Custom system prompt**: Override assistant behavior for more control
+- **🚀 Streaming replies**: See the model answer as it generates in real time
+- **📤 Document upload**: Add PDFs or plain text files on the fly
+- **🔐 Local inference**: Run Ollama locally with no external API key required
+- **🎨 Futuristic UI**: Modern Prometheus-branded interface with responsive layout
 
 ## 📋 Prerequisites
 
-Before you start, ensure you have:
-
-- **Python 3.9+** - [Download](https://www.python.org/downloads/)
-- **Ollama** - [Download](https://ollama.com/download) (for local LLM inference)
-- **Git** - [Download](https://git-scm.com/)
-- **8GB+ RAM** - For running Phi3 model (16GB+ recommended)
+- **Python 3.9+**
+- **Ollama** installed and available on your PATH
+- **Git** (optional, for cloning the repo)
+- **8GB+ RAM** (16GB+ recommended for model performance)
 
 ## 🚀 Quick Start
 
-### 1. Clone the Repository
+1. Clone the repo and enter the folder:
 
 ```bash
 git clone https://github.com/SiddharthMaverick/llm-platform.git
 cd llm-platform
 ```
 
-### 2. Create Virtual Environment
+2. Create and activate a virtual environment:
 
-**Windows:**
 ```bash
 python -m venv venv
 venv\Scripts\activate
 ```
 
-**macOS/Linux:**
-```bash
-python -m venv venv
-source venv/bin/activate
-```
-
-### 3. Install Dependencies
+3. Install Python dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Install and Start Ollama
+4. Start the Ollama server in a separate terminal:
 
-**Download & Install:**
-- Visit [ollama.com/download](https://ollama.com/download)
-- Follow the installation wizard for your OS
-- After installation, restart your terminal
-
-**Start Ollama Server** (Keep this terminal open):
 ```bash
 ollama serve
 ```
 
-You should see:
-```
-Starting Ollama application...
-Listening on [::]:11434 (HTTP)
-```
+5. Pull the model used by the app:
 
-### 5. Pull the Model
-
-**In a new terminal:**
 ```bash
 ollama pull phi3
 ```
 
-Wait for the download to complete (~2.5GB).
-
-### 6. Configure Environment
-
-The `.env` file is already configured:
-```env
-OLLAMA_HOST=http://localhost:11434
-MODEL_NAME=phi3
-```
-
-No changes needed unless using a different setup.
-
-### 7. Start the Application
+6. Run the FastAPI app:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-You should see:
-```
-INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-INFO:     Watching for file changes in ['C:\Users\siddh\llm-platform']
-```
+7. Open the app in your browser:
 
-### 8. Access the Application
-
-Open your browser and go to:
-```
+```bash
 http://localhost:8000
 ```
 
-🎉 You're all set! Start asking questions.
+## 💡 Usage
 
-## 📖 Usage
+- Enter a prompt in the chat box
+- Select your preferred mode
+- Toggle document context on or off
+- Add a custom system prompt to refine responses
+- Upload documents to expand the knowledge base
+- Reset the session or clear session memory anytime
 
-### Via Web Interface
+## 📘 API Docs
 
-1. **Open** http://localhost:8000 in your browser
-2. **Type** your question in the chat box
-3. **Press** Enter or click Send
-4. **Wait** for the AI to search documents and generate an answer
-5. **See** real-time streaming response
+Visit:
 
-### Example Questions
-
-- "What is attention mechanism?"
-- "How do transformers work?"
-- "Explain self-attention with examples"
-- "What are the applications of this technology?"
-
-### API Documentation
-
-Interactive API docs available at:
-```
+```bash
 http://localhost:8000/docs
 ```
 
