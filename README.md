@@ -13,12 +13,6 @@ The intuitive futuristic interface with Forge Master branding. Start chatting im
 
 ![Platform Opening View](platform.png)
 
-### How It Works — In Action
-Watch how the RAG platform retrieves documents and streams intelligent responses in real time.
-
-[![How It Works Demo](https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg)](NEW.mp4)
-
-**[📹 Click here to watch the demo video](https://github.com/SiddharthMaverick/llm-platform/raw/main/NEW.mp4)** — See real-time RAG retrieval and streaming responses in action.
 
 ## �🎯 Features
 
