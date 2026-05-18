@@ -29,10 +29,10 @@ async def rag_chat(
 
     context_text = "\n\n".join([
         f"""
-SOURCE: {doc['source']}
-CHUNK: {doc['chunk_id']}
+SOURCE: {doc.get('source', 'Unknown')}
+CHUNK ID: {doc.get('chunk_id', 'N/A')}
 
-{doc['text']}
+{doc.get('text', '')}
 """
         for doc in contexts
     ])

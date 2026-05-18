@@ -84,6 +84,52 @@ uvicorn app.main:app --reload
 ### 7. Open in Browser
 Navigate to [http://localhost:8000](http://localhost:8000) and start chatting!
 
+## 🌐 Offline Operation
+
+**Forge Master is fully designed to run completely offline with zero internet dependency!**
+
+### How to Setup for Offline Use
+
+1. **First-time setup (requires internet):**
+   - Download all models while connected to the internet
+   
+   ```bash
+   # Download embedding model (cached automatically after first run)
+   python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')"
+   
+   # Download LLM model via Ollama
+   ollama pull phi3
+   ```
+
+2. **After initial setup, you can operate completely offline:**
+   - No external API calls
+   - No internet required
+   - All models cached locally in:
+     - Embedding model: `~/.cache/sentence-transformers/`
+     - LLM model: Ollama local cache
+     - Vector index: `./vector_store/faiss.index`
+
+### Offline Benefits
+
+- **Privacy**: Your documents and conversations never leave your machine
+- **Speed**: No network latency; all processing is local
+- **Reliability**: Works without internet connection
+- **Cost**: Zero API charges; run unlimited queries
+
+### Choosing Lightweight Models for Offline
+
+For systems with limited resources, use smaller models:
+
+```bash
+# Lightweight options (~4-7GB)
+ollama pull phi3          # Recommended for CPU (4GB)
+ollama pull neural-chat   # Fast inference (4GB)
+ollama pull mistral       # Balanced (7GB)
+
+# Update .env to use different model
+# MODEL_NAME=phi3
+```
+
 ## 💡 Usage Guide
 
 ### Basic Workflow
@@ -255,6 +301,30 @@ MODEL_NAME=mistral
 ### FAISS index errors
 - Delete `vector_store/faiss.index` to rebuild the index from scratch
 - Restart the application
+
+### Offline Troubleshooting
+
+#### Models downloading repeatedly (not cached)
+- Check cache directory: `~/.cache/sentence-transformers/`
+- Manually set cache: `export SENTENCE_TRANSFORMERS_HOME=/path/to/cache`
+- Verify disk space (at least 1GB free)
+
+#### "Model not found" error when offline
+- Ensure models are downloaded first (see [Offline Operation](#-offline-operation) section)
+- Models must be cached locally before disconnecting from internet
+- Run pre-download commands while connected to internet
+
+#### Works offline but very slow
+- Check available system RAM (16GB+ recommended)
+- Verify no other heavy processes running
+- Consider smaller models: `phi3`, `neural-chat`
+- Reduce context retrieval: set `k=2` in `retriever.py`
+
+#### "Connection refused" offline
+- This is normal if you're offline! Ensure:
+  - Ollama is still running locally (`ollama serve`)
+  - FAISS index is built and cached
+  - Embedding model is cached locally
 
 ### Server Configuration
 

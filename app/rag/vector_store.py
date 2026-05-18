@@ -27,10 +27,11 @@ def add_embeddings(chunks, embeddings, doc_source="unknown"):
 
     index.add(embeddings)
 
-    for chunk in chunks:
+    for idx, chunk in enumerate(chunks):
         documents.append({
             "text": chunk,
-            "source": doc_source
+            "source": doc_source,
+            "chunk_id": len(documents)
         })
 
 
