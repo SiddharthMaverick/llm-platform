@@ -16,7 +16,7 @@ The intuitive futuristic interface with Prometheus branding. Start chatting imme
 ### How It Works — In Action
 Watch how the RAG platform retrieves documents and streams intelligent responses in real time.
 
-https://github.com/SiddharthMaverick/llm-platform/assets/raw/main/NEW.mp4
+https://github.com/SiddharthMaverick/llm-platform/NEW.mp4
 
 ## �🎯 Features
 
