@@ -6,16 +6,29 @@ A futuristic Retrieval Augmented Generation (RAG) workspace with a polished web 
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green)
 ![Ollama](https://img.shields.io/badge/Ollama-local-lightgrey)
 
-## 🎯 Features
+## � Demo
 
-- **📚 RAG-powered knowledge**: Retrieve answers from your uploaded documents using FAISS vector search
-- **🧠 Session memory**: Keep context across the chat and clear memory when needed
-- **⚙️ Mode selection**: Choose Chat, Summarize, Explain, Code Review, or Answer modes
-- **📝 Custom system prompt**: Override assistant behavior for more control
-- **🚀 Streaming replies**: See the model answer as it generates in real time
-- **📤 Document upload**: Add PDFs or plain text files on the fly
-- **🔐 Local inference**: Run Ollama locally with no external API key required
-- **🎨 Futuristic UI**: Modern Prometheus-branded interface with responsive layout
+### Platform Interface — Opening View
+The intuitive futuristic interface with Prometheus branding. Start chatting immediately with a clean, responsive layout.
+
+![Platform Opening View](platform.png)
+
+### How It Works — In Action
+Watch how the RAG platform retrieves documents and streams intelligent responses in real time.
+
+https://github.com/SiddharthMaverick/llm-platform/assets/raw/main/NEW.mp4
+
+## �🎯 Features
+
+- **📚 RAG-powered knowledge**: Retrieve context-aware answers from your uploaded documents using FAISS vector search and semantic embeddings
+- **🧠 Session memory**: Maintain conversation context across multiple turns; clear memory anytime to start fresh
+- **⚙️ Mode selection**: Choose from Chat, Summarize, Explain, Code Review, or Answer modes to tailor responses
+- **📝 Custom system prompt**: Override assistant behavior for fine-grained control over response generation
+- **🚀 Streaming replies**: See the model generate responses in real time, token by token
+- **📤 Document upload**: Add PDFs or plain text files on the fly to expand your knowledge base
+- **🔐 Local inference**: Run Ollama locally with no external API keys or cloud dependencies
+- **🎨 Futuristic UI**: Modern Prometheus-branded interface with responsive design for desktop and mobile
+- **⚡ Fast embeddings**: 384-dimensional semantic vectors using SentenceTransformer for accurate retrieval
 
 ## 📋 Prerequisites
 
@@ -26,58 +39,70 @@ A futuristic Retrieval Augmented Generation (RAG) workspace with a polished web 
 
 ## 🚀 Quick Start
 
-1. Clone the repo and enter the folder:
-
+### 1. Clone and Navigate
 ```bash
 git clone https://github.com/SiddharthMaverick/llm-platform.git
 cd llm-platform
 ```
 
-2. Create and activate a virtual environment:
-
+### 2. Create Virtual Environment
+**On Windows:**
 ```bash
 python -m venv venv
 venv\Scripts\activate
 ```
 
-3. Install Python dependencies:
+**On macOS/Linux:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
+### 3. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Start the Ollama server in a separate terminal:
-
+### 4. Start Ollama Server
+Open a new terminal and start Ollama (must be installed and on PATH):
 ```bash
 ollama serve
 ```
 
-5. Pull the model used by the app:
-
+### 5. Pull the Model
 ```bash
 ollama pull phi3
 ```
 
-6. Run the FastAPI app:
-
+### 6. Launch the Application
 ```bash
 uvicorn app.main:app --reload
 ```
 
-7. Open the app in your browser:
+### 7. Open in Browser
+Navigate to [http://localhost:8000](http://localhost:8000) and start chatting!
 
-```bash
-http://localhost:8000
-```
+## 💡 Usage Guide
 
-## 💡 Usage
+### Basic Workflow
+1. **Type your question** in the chat input box
+2. **Select a mode** (Chat, Summarize, Explain, Code Review, Answer) to tailor the response
+3. **Toggle document context** on or off to control whether RAG retrieval is used
+4. **Upload documents** (PDF/TXT) to expand the knowledge base
+5. **Customize system prompt** to control the AI's personality and behavior
+6. **Clear memory** anytime to start a fresh conversation
 
-- Enter a prompt in the chat box
-- Select your preferred mode
-- Toggle document context on or off
-- Add a custom system prompt to refine responses
-- Upload documents to expand the knowledge base
-- Reset the session or clear session memory anytime
+### Example Prompts
+- "Summarize the main points about quantum computing" (Summarize mode)
+- "Explain how attention mechanisms work" (Explain mode)
+- "Review this Python code for security issues" (Code Review mode)
+- "What are the key findings in the uploaded research paper?" (Answer mode)
+
+### Tips for Best Results
+- Keep questions concise and specific for better retrieval
+- Upload relevant documents before asking domain-specific questions
+- Use the mode selection to get tailored response formats
+- Experiment with custom system prompts to refine output quality
 
 ## 📘 API Docs
 
@@ -177,26 +202,57 @@ Results:
 ## 🔧 Configuration
 
 ### Environment Variables (.env)
+Create a `.env` file in the project root:
 
 ```env
 OLLAMA_HOST=http://localhost:11434    # Ollama server address
-MODEL_NAME=phi3                        # Model to use (phi3, mistral, etc.)
+MODEL_NAME=phi3                        # Model to use (phi3, mistral, llama2, etc.)
 ```
 
 ### RAG Parameters
+Fine-tune RAG behavior in `app/rag/startup.py`:
 
-Edit values in `app/rag/startup.py`:
+| Parameter | Default | Purpose |
+|-----------|---------|---------|
+| `chunk_size` | 500 | Characters per document chunk |
+| `chunk_overlap` | 100 | Overlap between chunks for context continuity |
+| `k` | 3 | Number of chunks to retrieve per query |
 
+In `app/rag/retriever.py`:
 ```python
-chunk_size=500          # Characters per chunk
-k=3                     # Number of retrieved chunks
+k=3                     # Number of results returned per search query
 ```
 
-Edit values in `app/rag/retriever.py`:
-
-```python
-k=3                     # Results per query
+### Model Selection
+To use a different model, modify your `.env` file and ensure the model is pulled:
+```bash
+ollama pull mistral   # or any other supported model
 ```
+
+Then update `.env`:
+```env
+MODEL_NAME=mistral
+```
+
+## 🎓 Troubleshooting
+
+### "Connection refused" when starting the app
+- Ensure Ollama is running in a separate terminal (`ollama serve`)
+- Check that `OLLAMA_HOST` in `.env` matches your Ollama server address
+
+### Model takes too long to respond
+- Increase RAM (16GB+ recommended)
+- Consider using a smaller model (e.g., `phi3` is optimized for speed)
+- Reduce `k` in `retriever.py` to retrieve fewer chunks
+
+### Document upload fails
+- Ensure the file is a valid PDF or TXT format
+- Check that the file size is reasonable (< 50MB recommended)
+- Verify `app/documents/` folder exists and is writable
+
+### FAISS index errors
+- Delete `vector_store/faiss.index` to rebuild the index from scratch
+- Restart the application
 
 ### Server Configuration
 
@@ -205,41 +261,35 @@ Change FastAPI port:
 uvicorn app.main:app --reload --port 8001
 ```
 
-## 🐛 Troubleshooting
+## � Learn More
 
-### Issue: "No connection could be made - target machine actively refused it"
+- **FastAPI Docs**: [https://fastapi.tiangolo.com](https://fastapi.tiangolo.com)
+- **Ollama Models**: [https://ollama.ai](https://ollama.ai)
+- **FAISS Documentation**: [https://github.com/facebookresearch/faiss](https://github.com/facebookresearch/faiss)
+- **Sentence Transformers**: [https://www.sbert.net](https://www.sbert.net)
 
-**Cause**: Ollama server not running
+## 📄 License
 
-**Solution**:
-```bash
-# Terminal 1
-ollama serve
+This project is licensed under the MIT License. See LICENSE file for details.
 
-# Terminal 2
-ollama pull phi3
-```
+## 🤝 Contributing
 
-### Issue: "Model not found" or "pull: manifest unknown"
+Contributions are welcome! Please feel free to submit a Pull Request with:
+- Bug fixes
+- New features
+- Documentation improvements
+- Performance optimizations
 
-**Cause**: Model not downloaded
+## 📧 Support
 
-**Solution**:
-```bash
-ollama pull phi3
-ollama list          # Verify installation
-```
+For issues, questions, or feedback:
+- Open a GitHub issue with detailed information
+- Include your OS, Python version, and error messages
+- Attach relevant logs from `uvicorn` or the browser console
 
-### Issue: "Port 8000 already in use"
+---
 
-**Cause**: Another application using port 8000
-
-**Solution**:
-```bash
-uvicorn app.main:app --reload --port 8001
-```
-
-### Issue: App slow or OOM (Out of Memory)
+**Built with ❤️ for AI enthusiasts and developers**
 
 **Cause**: Insufficient RAM
 
