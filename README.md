@@ -392,4 +392,4 @@ For questions or suggestions, please open an issue on GitHub.
 
 **Happy querying!** 🚀 If you find this useful, please give it a ⭐
 
-Last Updated: May 15, 2026
+Last Updated: May 18, 2026
