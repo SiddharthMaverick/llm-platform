@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prometheus AI — RAG Interface</title>
+    <title>Forge Master AI</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
@@ -454,7 +454,7 @@
         <section class="panel" id="sidebarPanel">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <div class="brand" style="margin: 0; padding-bottom: 0; border-bottom: none;">
-                    <h1 style="font-size: 1.2rem; margin: 0;">Prometheus</h1>
+                    <h1 style="font-size: 1.2rem; margin: 0;">Forge Master</h1>
                 </div>
                 <button class="close-btn" id="closeBtn">✕</button>
             </div>
@@ -515,7 +515,7 @@
             <div class="status-strip">
                 <button class="menu-btn" id="menuBtn">☰</button>
                 <div class="title">
-                    <h2>Prometheus AI</h2>
+                    <h2>Forge Master AI</h2>
                 </div>
                 <div style="width: 36px;"></div>
             </div>
@@ -570,7 +570,7 @@
         const uploadBtn = document.getElementById('uploadBtn');
         const uploadStatus = document.getElementById('uploadStatus');
 
-        const sessionIdKey = 'prometheus_ai_session_id';
+        const sessionIdKey = 'forge_master_ai_session_id';
         let sessionId = localStorage.getItem(sessionIdKey) || generateSessionId();
         let lastPrompt = '';
         let lastMessageElement = null;
@@ -619,7 +619,7 @@
             bubble.className = `bubble ${sender}`;
             if (sender === 'bot') {
                 const label = document.createElement('h3');
-                label.textContent = 'Prometheus';
+                label.textContent = 'Forge Master';
                 bubble.appendChild(label);
             }
 
