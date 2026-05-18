@@ -6,19 +6,55 @@ from app.rag.ingest import (
 )
 
 from app.rag.embedder import embed_text
-from app.rag.vector_store import add_embeddings
 
-PDF_PATH = "app/documents/transformer.pdf"
+from app.rag.vector_store import (
+    add_embeddings,
+    save_index,
+    load_index
+)
+
+DOCUMENTS_DIR = Path("app/documents")
 
 
 def initialize_rag():
 
-    text = read_pdf(PDF_PATH)
+    loaded = load_index()
 
-    chunks = chunk_text(text)
+    if loaded:
 
-    embeddings = embed_text(chunks)
+        print("Using existing vector store")
 
-    add_embeddings(chunks, embeddings)
+        return
 
-    print(f"Indexed {len(chunks)} chunks")
+    print("Building new vector store")
+
+    all_chunks = []
+
+    for pdf_file in DOCUMENTS_DIR.glob("*.pdf"):
+
+        text = read_pdf(str(pdf_file))
+
+        chunks = chunk_text(
+            text=text,
+            source=pdf_file.name
+        )
+
+        all_chunks.extend(chunks)
+
+    texts = [
+        chunk["text"]
+        for chunk in all_chunks
+    ]
+
+    embeddings = embed_text(texts)
+
+    add_embeddings(
+        all_chunks,
+        embeddings
+    )
+
+    save_index()
+
+    print(
+        f"Indexed {len(all_chunks)} chunks"
+    )
